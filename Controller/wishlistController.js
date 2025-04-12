@@ -4,6 +4,7 @@ const Property = require("../Model/propertyModel");
 
 exports.addToWishList = async (req, res, next) => {
   let isAdded;
+  let property;
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -13,18 +14,20 @@ exports.addToWishList = async (req, res, next) => {
       return next(new AppError("The body doesn't contain property id."), 404);
     }
     if (user.wishlist.includes(req.body.propertyId)) {
-      user.wishlist = user.wishlist.filter((el) => el != req.body.propertyId);
+      user.wishlist = user.wishlist.filter((el) => el !== req.body.propertyId);
       isAdded = false;
     } else {
       user.wishlist.push(req.body.propertyId);
+      property = await Property.findById(req.body.propertyId);
       isAdded = true;
     }
 
     await user.save();
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
       message: user,
       isAdded,
+      property,
     });
   } catch (err) {
     return next(new AppError(err, 403));
