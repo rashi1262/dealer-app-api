@@ -8,8 +8,6 @@ exports.checkPropertyFeild = async (req, res, next) => {
       !req.body.price ||
       !req.body.type ||
       !req.body.status ||
-      !req.body.brokerName ||
-      !req.body.contactNumber ||
       !req.body.features ||
       !req.body.description
     ) {
@@ -72,8 +70,6 @@ exports.checkUpdateFeild = async (req, res, next) => {
       req.body.price ||
       req.body.type ||
       req.body.status ||
-      req.body.brokerName ||
-      req.body.contactNumber ||
       req.body.features ||
       req.body.description ||
       req.body.image

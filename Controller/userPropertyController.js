@@ -7,11 +7,12 @@ exports.createProperty = async (req, res, next) => {
     if (!req.params.id) {
       return next(new AppError("No user id.", 404));
     }
-    const property = await Property.create(req.data);
     const user = await User.findById(req.params.id);
     if (!user) {
       return next(new AppError("User doesn't exsist.", 404));
     }
+    const data = { ...req.data, phone: user.phone };
+    const property = await Property.create(data);
     user.property.push(property._id);
     await user.save();
     res.status(201).json({

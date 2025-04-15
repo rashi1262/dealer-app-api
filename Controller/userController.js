@@ -35,15 +35,16 @@ exports.updateUser = async function (req, res, next) {
     if (user === null) {
       return next(new AppError("Invalid Id or User doesn't exist.", 404));
     }
+    const response = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
-    user.phone = req.body.phone || user.phone;
-    user.name = req.body.name || user.name;
-
-    await user.save({ validateBeforeSave: false });
+    user.updated = true;
+    await user.save();
 
     res.status(201).json({
-      status: "sucesss",
-      message: user,
+      status: "sucess",
+      message: response,
     });
   } catch (err) {
     return next(new AppError(err, 403));

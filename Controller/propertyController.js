@@ -50,6 +50,7 @@ exports.updateProperty = async (req, res, next) => {
 };
 exports.deleteProperty = async (req, res, next) => {
   try {
+    console.log(req.params.id);
     const property = await Property.findByIdAndDelete(req.params.id);
     res.status(201).json({
       status: "success",

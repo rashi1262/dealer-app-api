@@ -22,18 +22,14 @@ const propertySchema = new mongoose.Schema(
     status: {
       type: String,
     },
-    brokerName: {
-      type: String,
-    },
-    contactNumber: {
-      type: String,
-    },
+
     features: {
       type: [String],
     },
     description: {
       type: String,
     },
+    phone: Number,
   },
   { timestamps: true }
 );

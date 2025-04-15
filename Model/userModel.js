@@ -20,6 +20,25 @@ const userSchema = new mongoose.Schema(
     property: {
       type: [String],
     },
+    address: {
+      type: String,
+    },
+    businessAddress: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    serviceArea: {
+      type: String,
+    },
+    updated: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
