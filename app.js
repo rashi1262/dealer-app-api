@@ -10,11 +10,12 @@ const userRoutes = require("./Routes/userRoutes");
 const propertyRoutes = require("./Routes/propertyRoutes");
 const wishlistRoutes = require("./Routes/wishlistRoutes");
 const userPropertyRoutes = require("./Routes/userPropertyroutes");
+const locationRoutes = require("./Routes/locationRoutes");
 
 app.use(
   cors({
-    origin: "http://localhost:8081", // or your React Native development server
-    credentials: true, // needed if you're sending cookies or authorization headers
+    origin: "http://localhost:3001",
+    credentials: true,
   })
 );
 app.use(cookieParser());
@@ -25,6 +26,7 @@ app.use("/api/v1", userRoutes);
 app.use("/api/v1", propertyRoutes);
 app.use("/api/v1", wishlistRoutes);
 app.use("/api/v1", userPropertyRoutes);
+app.use("/api/v1", locationRoutes);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

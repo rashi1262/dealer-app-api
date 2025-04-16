@@ -43,3 +43,25 @@ exports.getAllProperties = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+
+exports.deleteUserProperty = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return next(new AppError("No user id."));
+    }
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return next(new AppError("User doesn't exsist.", 404));
+    }
+    const property = await Property.findByIdAndDelete(req.body.propertyId);
+    user.property = user.property.filter((el) => el != req.body.propertyId);
+    await user.save();
+    res.status(201).json({
+      status: "success",
+      message: "property successfully deleted.",
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};

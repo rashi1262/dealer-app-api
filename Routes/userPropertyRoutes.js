@@ -11,5 +11,6 @@ router
   .post(checkPropertyFeild, propertyController.createProperty);
 
 router.route("/userproperties/:id").get(propertyController.getAllProperties);
+router.route("/userproperty/:id").patch(propertyController.deleteUserProperty);
 
 module.exports = router;
