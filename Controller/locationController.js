@@ -2,16 +2,28 @@ const Property = require("../Model/propertyModel");
 const Location = require("../Model/locationModel");
 const AppError = require("../Utils/AppError");
 
+exports.allData = async (req, res, next) => {
+  location = await Location.create(req.body);
+  res.status(201).json({
+    status: "success",
+    message: location,
+  });
+};
+
 exports.createLocation = async (req, res, next) => {
   try {
     let location;
-    location = await Location.findOne({ city: req.body.city });
-    if (!location) {
-      location = await Location.create(req.body);
-    } else {
-      location.availableLocation.push(req.body.availableLocation);
+    const { city, areaName, state } = req.body;
+    location = await Location.findOne({
+      $and: [{ city: city }, { areaName: areaName }, { state: state }],
+    });
+    if (location) {
+      return res.status(200).json({
+        status: "success",
+        message: "Location already exist",
+      });
     }
-    await location.save();
+    location = await Location.create(req.body);
     res.status(201).json({
       status: "success",
       message: location,
@@ -47,9 +59,9 @@ exports.getLocationById = async (req, res, next) => {
 };
 exports.getLocationByCity = async (req, res, next) => {
   try {
-    const location = await Location.findOne({ city: req.params.city });
+    const location = await Location.find({ city: req.params.city });
     if (!location) {
-      return next(new AppError("City not fournd", 404));
+      return next(new AppError("City not found", 404));
     }
     res.status(200).json({
       status: "success",
@@ -62,31 +74,38 @@ exports.getLocationByCity = async (req, res, next) => {
 
 exports.updateLocation = async (req, res, next) => {
   try {
-    const location = await Location.findById(req.params.id);
-    if (req.body.city) {
-      location.city.push(req.body.city);
-    } else if (req.body.state) {
-      location.state.push(req.body.state);
-    } else if (req.body.areaName) {
-      location.state.push(req.body.areaName);
-    } else if (req.body.push())
-      res.status(201).json({
-        status: "success",
-        message: property,
-      });
+    const location = await Location.findByIdAndUpdate(req.params.id, req.body);
+    res.status(201).json({
+      status: "success",
+      message: location,
+    });
   } catch (error) {
     return next(new AppError(error.message, 500));
   }
 };
-exports.deleteProperty = async (req, res, next) => {
+exports.deleteLocation = async (req, res, next) => {
   try {
-    console.log(req.params.id);
-    const property = await Property.findByIdAndDelete(req.params.id);
+    const location = await Location.findByIdAndDelete(req.params.id);
+
     res.status(201).json({
       status: "success",
-      message: "property successfully deleted.",
+      message: location,
     });
   } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getAllCity = async (req, res, next) => {
+  try {
+    const cities = await Location.distinct("city");
+
+    res.status(201).json({
+      status: "success",
+      message: cities,
+    });
+  } catch (error) {
+    console.log(error);
     return next(new AppError(error.message, 500));
   }
 };

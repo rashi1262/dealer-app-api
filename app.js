@@ -11,6 +11,7 @@ const propertyRoutes = require("./Routes/propertyRoutes");
 const wishlistRoutes = require("./Routes/wishlistRoutes");
 const userPropertyRoutes = require("./Routes/userPropertyroutes");
 const locationRoutes = require("./Routes/locationRoutes");
+const groupRoutes = require("./Routes/groupRoutes");
 
 app.use(
   cors({
@@ -27,6 +28,7 @@ app.use("/api/v1", propertyRoutes);
 app.use("/api/v1", wishlistRoutes);
 app.use("/api/v1", userPropertyRoutes);
 app.use("/api/v1", locationRoutes);
+app.use("/api/v1", groupRoutes);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
