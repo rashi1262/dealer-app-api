@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    joinedGroup: {
+      type: [String],
+    },
+    groups: {
+      type: [String],
+    },
   },
   { timestamps: true }
 );

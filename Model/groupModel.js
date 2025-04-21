@@ -14,7 +14,10 @@ const groupSchema = new moongoose.Schema({
     type: String,
   },
   serviceArea: {
-    type: String,
+    type: [String],
+  },
+  groupMembers: {
+    type: [],
   },
 });
 

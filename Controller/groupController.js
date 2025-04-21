@@ -6,11 +6,16 @@ const Location = require("../Model/locationModel");
 exports.createGroup = async (req, res, next) => {
   try {
     const group = await Group.create({ ...req.body });
+    const user = await User.findById(req.params.id);
+    user.groups.push(group._id);
+    await user.save();
+
     res.status(201).json({
       status: "success",
       message: group,
     });
   } catch (error) {
+    console.log(error);
     return next(new AppError(error.message, 500));
   }
 };
@@ -89,5 +94,54 @@ exports.deleteGroup = async function (req, res, next) {
     });
   } catch (err) {
     return next(new AppError(err, 403));
+  }
+};
+
+exports.joinGroup = async (req, res, next) => {
+  try {
+    const group = await Group.findById(req.params.id);
+    const user = await User.findById(req.body.id);
+    const data = {
+      name: user.name,
+      number: user.phone,
+    };
+    group.groupMembers.push(data);
+    user.joinedGroup.push(group._id);
+    await group.save();
+    await user.save();
+    res.status(201).json({
+      status: "success",
+      message: group,
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getAlljoinedGroup = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const groups = await Group.find({ _id: { $in: user.joinedGroup } });
+    res.status(201).json({
+      status: "success",
+      message: groups,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getAllCreateGroup = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const groups = await Group.find({ _id: { $in: user.groups } });
+    res.status(201).json({
+      status: "success",
+      message: groups,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new AppError(error.message, 500));
   }
 };
