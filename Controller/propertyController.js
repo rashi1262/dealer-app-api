@@ -15,7 +15,7 @@ exports.createProperty = async (req, res, next) => {
 
 exports.getAllProperties = async (req, res, next) => {
   try {
-    const properties = await Property.find();
+    const properties = await Property.find().sort("-createdAt");
     res.status(201).json({
       status: "success",
       totalProperties: properties.length,

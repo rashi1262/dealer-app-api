@@ -44,6 +44,7 @@ exports.getGroup = async function (req, res, next) {
       message: group,
     });
   } catch (err) {
+    console.log(err);
     return next(new AppError(err, 403));
   }
 };
@@ -121,7 +122,9 @@ exports.joinGroup = async (req, res, next) => {
 exports.getAlljoinedGroup = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
-    const groups = await Group.find({ _id: { $in: user.joinedGroup } });
+    const groups = await Group.find({ _id: { $in: user.joinedGroup } }).sort(
+      "-createdAt"
+    );
     res.status(201).json({
       status: "success",
       message: groups,
@@ -135,7 +138,9 @@ exports.getAlljoinedGroup = async (req, res, next) => {
 exports.getAllCreateGroup = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
-    const groups = await Group.find({ _id: { $in: user.groups } });
+    const groups = await Group.find({ _id: { $in: user.groups } }).sort(
+      "-createdAt"
+    );
     res.status(201).json({
       status: "success",
       message: groups,
@@ -143,5 +148,43 @@ exports.getAllCreateGroup = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return next(new AppError(error.message, 500));
+  }
+};
+
+exports.checkGroup = async (req, res, next) => {
+  try {
+    const group = await Group.findOne({
+      serviceArea: { $in: req.params.serviceArea },
+    });
+    res.status(201).json({
+      status: "success",
+      message: group,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.updateMembers = async function (req, res, next) {
+  try {
+    const group = await Group.findOne({ _id: req.params.id });
+    if (group === null) {
+      return next(new AppError("Invalid Id or Group doesn't exist.", 404));
+    }
+
+    const data = [...group.groupMembers, ...req.body];
+
+    group.groupMembers = data;
+
+    await group.save();
+
+    res.status(201).json({
+      status: "success",
+      message: group,
+    });
+  } catch (err) {
+    console.log(err);
+    return next(new AppError(err, 403));
   }
 };
