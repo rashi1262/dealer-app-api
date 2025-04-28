@@ -24,7 +24,6 @@ exports.saveToken = async (req, res) => {
       existing.phone = user.phone;
       await existing.save();
     }
-    console.log(user);
     res.status(200).json({ message: "Token saved successfully" });
   } catch (error) {
     console.error(error);

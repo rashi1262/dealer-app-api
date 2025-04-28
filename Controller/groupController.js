@@ -36,13 +36,13 @@ exports.createGroup = async (req, res, next) => {
       const data = {
         users: existingUsers,
         title: "Dealer App",
-        body: "You are added to a group.",
+        body: "You have been added to a new group! Tap here to check it out.",
       };
       await axios.post("http://localhost:3000/api/send-notification/", data);
     }
     if (nonExistingUsers.length > 0) {
       await axios.post("http://localhost:3000/api/send-text", {
-        body: "You are added to a group.",
+        body: "You've been added to a new group! 🎉 stay connected and explore new opportunities with your group members.",
         users: nonExistingUsers,
       });
     }
